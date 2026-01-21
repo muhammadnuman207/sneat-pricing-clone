@@ -64,6 +64,7 @@ body { background: var(--bg); color: var(--text); }
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
+  /* position: fixed; */
 }
 .topbar-title{ font-weight: 600; }
 .topbar-right{ display: flex; align-items: center; gap: 10px; }
@@ -92,10 +93,9 @@ body { background: var(--bg); color: var(--text); }
 /* Plan card */
 .plan-card{
   background: var(--card);
-  border: 1px solid var(--border);
   border-radius: 18px;
   padding: 18px;
-  box-shadow: 0 6px 20px rgba(25, 30, 50, 0.06);
+  box-shadow: 0 6px 20px rgba(38, 73, 216, 0.06);
   position: relative;
   height: 100%;
 }
@@ -113,6 +113,12 @@ body { background: var(--bg); color: var(--text); }
   font-size: 12px;
   padding: 6px 10px;
   border-radius: 999px;
+}
+
+.card:focus{
+  border: 2px solid #4d81b8;
+  box-shadow: 0 0 10px rgba(13, 148, 182, 0.5);
+  outline: none;
 }
 
 .plan-emoji{

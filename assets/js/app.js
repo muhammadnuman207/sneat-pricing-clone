@@ -34,3 +34,32 @@ toggleSidebar?.addEventListener("click", () => {
 
 // Initial
 setBilling(false);
+
+const cards = document.querySelectorAll('.card');
+cards.forEach(card => {
+  card.addEventListener('click', function(){
+    this.focus();
+  });
+});
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  const card = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    card.addEventListener('click', function(){
+      cards.forEach(c => c.blur());
+      this.focus();
+    });
+});
+});
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  const productsLink = document.getElementById('products-menu-link');
+  if (productsLink) {
+    productsLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = 'product.html';
+    });
+}
+  });
