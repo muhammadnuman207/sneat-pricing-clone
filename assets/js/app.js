@@ -105,18 +105,17 @@ function loadProductPage() {
 const dynamicContent = document.getElementById('dynamic-content');
 if (dynamicContent.innerHTML.trim() !== '') {
   console.log('Product view is active');
-const mylabel = document.getElementById("product-form");
-mylabel.addEventListener('submit',(e) => {
-e.preventDefault();
-submitForm();
-});
+  const mylabel = document.getElementById("product-form");
+  mylabel.addEventListener('submit',(e) => {
+  e.preventDefault();
+  submitForm();
+  });
 }
 function submitForm() {
   const Name = document.getElementById("name").value;
-const Price = document.getElementById("price").value;
-const category = document.getElementById("category").value;
-const checkbox = document.getElementById("inStock").value;
-const date = document.getElementById("createdAt").value;
-console.log('API URL:', Name, Price, category, checkbox, date);
+  const Price = document.getElementById("price").value;
+  const category = document.getElementById("category").value;
+  const checkbox = document.getElementById("inStock").checked;
+  const date = document.getElementById("createdAt").value;
+  console.log('API URL:', Name, Price, category, checkbox, date);
 }
-
