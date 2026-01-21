@@ -2,6 +2,8 @@ const billingSwitch = document.getElementById("billingSwitch");
 const amounts = document.querySelectorAll(".amount");
 const durations = document.querySelectorAll(".duration");
 const perYearEls = document.querySelectorAll(".per-year");
+const API_URL = 'http://localhost:3000/api/products';
+
 
 function setBilling(isYearly) {
   amounts.forEach(el => {
@@ -50,16 +52,71 @@ document.addEventListener('DOMContentLoaded', (event) => {
       cards.forEach(c => c.blur());
       this.focus();
     });
-});
-});
+  });
 
-
-document.addEventListener('DOMContentLoaded', (event) => {
-  const productsLink = document.getElementById('products-menu-link');
-  if (productsLink) {
-    productsLink.addEventListener('click', function(e) {
+  // View switching
+  const viewLinks = document.querySelectorAll('.sidebar-link[data-view]');
+  viewLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
       e.preventDefault();
-      window.location.href = 'product.html';
+      const viewName = link.getAttribute('data-view');
+      switchView(viewName);
+      
+      // Update active link
+      viewLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+});
+
+function switchView(viewName) {
+  const pricingView = document.getElementById('pricing-view');
+  const dynamicContent = document.getElementById('dynamic-content');
+  
+  if (viewName === 'pricing') {
+    pricingView.style.display = 'block';
+    dynamicContent.style.display = 'none';
+  } else if (viewName === 'product') {
+    pricingView.style.display = 'none';
+    dynamicContent.style.display = 'block';
+    loadProductPage();
+  }
+}
+
+function loadProductPage() {
+  const dynamicContent = document.getElementById('dynamic-content');
+  
+  fetch('product.html')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to load product page');
+      }
+      return response.text();
+    })
+    .then(html => {
+      dynamicContent.innerHTML = html;
+    })
+    .catch(error => {
+      console.error('Error loading product page:', error);
+      dynamicContent.innerHTML = '<p class="text-danger">Failed to load product page</p>';
     });
 }
-  });
+
+const dynamicContent = document.getElementById('dynamic-content');
+if (dynamicContent.innerHTML.trim() !== '') {
+  console.log('Product view is active');
+const mylabel = document.getElementById("product-form");
+mylabel.addEventListener('submit',(e) => {
+e.preventDefault();
+submitForm();
+});
+}
+function submitForm() {
+  const Name = document.getElementById("name").value;
+const Price = document.getElementById("price").value;
+const category = document.getElementById("category").value;
+const checkbox = document.getElementById("inStock").value;
+const date = document.getElementById("createdAt").value;
+console.log('API URL:', Name, Price, category, checkbox, date);
+}
+

@@ -1,0 +1,42 @@
+<body>
+  <script src="assets/js/app.js"></script>
+</body>
+<div class="product-form-wrapper">
+  <h3 class="mb-4">Add Product</h3>
+  <form id="product-form">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" class="form-control" id="name" placeholder="Product Name" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="price" class="form-label">Price</label>
+      <input type="number" class="form-control" id="price"  min="1" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="category" class="form-label">Category</label>
+      <select id="category" class="form-control" required>
+        <option value="">Select Category</option>
+        <option value="electronics">Electronics</option>
+        <option value="clothing">Clothing</option>
+        <option value="books">Books</option>
+      </select>
+    </div>
+
+    <div class="form-check mb-3">
+      <input type="checkbox" class="form-check-input" id="inStock" checked>
+      <label class="form-check-label" for="inStock">In Stock</label>
+    </div>
+
+    <div class="mb-3">
+      <label for="createdAt" class="form-label">Creation Date</label>
+      <input type="date" class="form-control" id="createdAt" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Product</button>
+  </form>
+</div>
+
+
+
