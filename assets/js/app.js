@@ -28,10 +28,40 @@ billingSwitch?.addEventListener("change", (e) => {
 
 // Sidebar toggle on mobile
 const toggleSidebar = document.getElementById("toggleSidebar");
+const closeSidebar = document.getElementById("closeSidebar");
 const sidebar = document.querySelector(".sidebar");
+const app = document.querySelector(".app");
+
+function openSidebar() {
+  sidebar?.classList.add("open");
+  app?.classList.add("sidebar-open");
+}
+
+function closeSidebarFunc() {
+  sidebar?.classList.remove("open");
+  app?.classList.remove("sidebar-open");
+}
 
 toggleSidebar?.addEventListener("click", () => {
-  sidebar?.classList.toggle("open");
+  if (sidebar?.classList.contains("open")) {
+    closeSidebarFunc();
+  } else {
+    openSidebar();
+  }
+});
+
+closeSidebar?.addEventListener("click", () => {
+  closeSidebarFunc();
+});
+
+// Close sidebar when clicking outside
+document.addEventListener("click", (e) => {
+  const isClickInsideSidebar = sidebar?.contains(e.target);
+  const isClickOnToggle = toggleSidebar?.contains(e.target);
+  
+  if (!isClickInsideSidebar && !isClickOnToggle && sidebar?.classList.contains("open")) {
+    closeSidebarFunc();
+  }
 });
 
 // Initial
@@ -103,7 +133,7 @@ function loadProductPage() {
 }
 
 const dynamicContent = document.getElementById('dynamic-content');
-if (dynamicContent.innerHTML.trim() !== '') {
+  if (dynamicContent.innerHTML.trim() !== '') {
   console.log('Product view is active');
   const mylabel = document.getElementById("product-form");
   mylabel.addEventListener('submit',(e) => {

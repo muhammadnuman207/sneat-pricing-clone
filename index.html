@@ -14,8 +14,13 @@
 
   <div class="app">
     <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-brand">Sneat</div>
+    <aside class="sidebar" id="sidebar"> 
+      <div class="sidebar-header">
+        <div class="sidebar-brand">Sneat</div>
+        <button class="sidebar-close d-md-none" id="closeSidebar">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+      </div>
       <nav class="sidebar-nav">
         <a class="sidebar-link active" href="#" data-view="pricing">Dashboard</a>
         <a class="sidebar-link" href="#" data-view="product"><i class="fa fa-product-hunt" aria-hidden="true"></i>Products</a>
@@ -24,8 +29,6 @@
         <a class="sidebar-link" href="#">Layouts</a>
         <a class="sidebar-link" href="#"><i class="fa fa-calendar" aria-hidden="true"></i>Calendar</a>
         <a class="sidebar-link" href="#">Settings</a>
-        <a class="content container-fluid"></a>
-
       </nav>
     </aside>
 
@@ -35,10 +38,10 @@
       <header class="topbar">
         <div class="topbar-left">
           <button class="btn btn-sm btn-light d-md-none" id="toggleSidebar">
-            <i class="bi bi-list"></i>
+            <i class="fa fa-bars"></i>
           </button>
           <i class="fa fa-search" aria-hidden="true"></i>
-          <input type="search"  id="site-search" name="q" placeholder="Search [CTRL+K]" />
+          <input type="search" id="site-search" name="q" placeholder="Search [CTRL+K]" />
         </div>
         <div class="topbar-right">
           <div class="avatar">JD</div>
@@ -160,7 +163,7 @@
         </div>
 
         <footer class="footer text-center text-muted mt-5 pb-4">
-          © made by ThemeSelection (clone practice)
+          © made by Themessls (clone practice)
         </footer>
         </div>
         <!-- End Pricing View -->
