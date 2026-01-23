@@ -149,3 +149,5 @@ function submitForm() {
   const date = document.getElementById("createdAt").value;
   console.log('API URL:', Name, Price, category, checkbox, date);
 }
+
+
