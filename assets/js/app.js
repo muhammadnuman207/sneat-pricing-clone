@@ -15,11 +15,6 @@ function setBilling(isYearly) {
   durations.forEach(el => {
     el.textContent = isYearly ? "/year" : "/month";
   });
-
-  // Optional helper line under price (like “USD 480 / year”)
-  perYearEls.forEach(el => {
-    el.style.display = isYearly ? "none" : "block";
-  });
 }
 
 billingSwitch?.addEventListener("change", (e) => {
@@ -54,7 +49,7 @@ closeSidebar?.addEventListener("click", () => {
   closeSidebarFunc();
 });
 
-// Close sidebar when clicking outside
+// close sidebar when clicking outside
 document.addEventListener("click", (e) => {
   const isClickInsideSidebar = sidebar?.contains(e.target);
   const isClickOnToggle = toggleSidebar?.contains(e.target);
@@ -68,7 +63,7 @@ document.addEventListener("click", (e) => {
 setBilling(false);
 
 const cards = document.querySelectorAll('.card');
-cards.forEach(card => {
+cards.forEach(card => { 
   card.addEventListener('click', function(){
     this.focus();
   });
@@ -84,7 +79,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
   });
 
-  // View switching
+  // view switching
   const viewLinks = document.querySelectorAll('.sidebar-link[data-view]');
   viewLinks.forEach(link => {
     link.addEventListener('click', (e) => {
@@ -92,7 +87,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       const viewName = link.getAttribute('data-view');
       switchView(viewName);
       
-      // Update active link
+      // update active link
       viewLinks.forEach(l => l.classList.remove('active'));
       link.classList.add('active');
     });
@@ -113,6 +108,9 @@ function switchView(viewName) {
   }
 }
 
+let products = [];
+let editingId = null;
+
 function loadProductPage() {
   const dynamicContent = document.getElementById('dynamic-content');
   
@@ -125,6 +123,8 @@ function loadProductPage() {
     })
     .then(html => {
       dynamicContent.innerHTML = html;
+      initializeProductForm();
+      displayProducts();
     })
     .catch(error => {
       console.error('Error loading product page:', error);
@@ -132,22 +132,112 @@ function loadProductPage() {
     });
 }
 
-const dynamicContent = document.getElementById('dynamic-content');
-  if (dynamicContent.innerHTML.trim() !== '') {
-  console.log('Product view is active');
-  const mylabel = document.getElementById("product-form");
-  mylabel.addEventListener('submit',(e) => {
-  e.preventDefault();
-  submitForm();
-  });
+function initializeProductForm() {
+  const productForm = document.getElementById("product-form");
+  if (productForm) {
+    productForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      submitForm();
+    });
+  }
 }
+
 function submitForm() {
   const Name = document.getElementById("name").value;
   const Price = document.getElementById("price").value;
   const category = document.getElementById("category").value;
   const checkbox = document.getElementById("inStock").checked;
   const date = document.getElementById("createdAt").value;
-  console.log('API URL:', Name, Price, category, checkbox, date);
+  
+  if (editingId) {
+    // Update existing product
+    const index = products.findIndex(p => p.id === editingId);
+    if (index > -1) {
+      products[index] = { id: editingId, Name, Price, category, checkbox, date };
+      editingId = null;
+      document.querySelector('#product-form button[type="submit"]').textContent = 'Save Product';
+    }
+  } else {
+    // Add new product
+    const newProduct = {
+      id: Date.now(),
+      Name,
+      Price,
+      category,
+      checkbox,
+      date
+    };
+    products.push(newProduct);
+  }
+  
+  document.getElementById("product-form").reset();
+  displayProducts();
+}
+
+function displayProducts() {
+  const tbody = document.getElementById("products-tbody");
+  if (!tbody) return;
+  
+  tbody.innerHTML = '';
+  
+  products.forEach(product => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${product.Name}</td>
+      <td>$${product.Price}</td>
+      <td>${product.category}</td>
+      <td>${product.checkbox ? 'Yes' : 'No'}</td>
+      <td>${product.date}</td>
+      <td>
+        <button class="btn btn-sm btn-warning edit-btn" data-id="${product.id}">
+          <i class="fa fa-edit"></i> Update
+        </button>
+        <button class="btn btn-sm btn-danger delete-btn" data-id="${product.id}">
+          <i class="fa fa-trash"></i> Delete
+        </button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+  
+  attachEventListeners();
+}
+
+function attachEventListeners() {
+  document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const id = e.target.closest('.edit-btn').getAttribute('data-id');
+      editProduct(parseInt(id));
+    });
+  });
+  
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const id = e.target.closest('.delete-btn').getAttribute('data-id');
+      deleteProduct(parseInt(id));
+    });
+  });
+}
+
+function editProduct(id) {
+  const product = products.find(p => p.id === id);
+  if (product) {
+    document.getElementById("name").value = product.Name;
+    document.getElementById("price").value = product.Price;
+    document.getElementById("category").value = product.category;
+    document.getElementById("inStock").checked = product.checkbox;
+    document.getElementById("createdAt").value = product.date;
+    editingId = id;
+    document.querySelector('#product-form button[type="submit"]').textContent = 'Update Product';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function deleteProduct(id) {
+  if (confirm('Are you sure you want to delete this product?')) {
+    products = products.filter(p => p.id !== id);
+    displayProducts();
+  }
 }
 
 
