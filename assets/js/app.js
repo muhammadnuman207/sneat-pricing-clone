@@ -169,7 +169,23 @@ function submitForm() {
     };
     products.push(newProduct);
   }
+
+  const response = fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: Name,
+      price: Price,
+      category: category,
+      inStock: checkbox,
+      createdAt: date
+    })
+  });
+  console.log(response);
   
+
   document.getElementById("product-form").reset();
   displayProducts();
 }
