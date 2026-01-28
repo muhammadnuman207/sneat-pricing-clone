@@ -165,15 +165,15 @@ async function submitForm() {
   const category = document.getElementById("category").value;
   const checkbox = document.getElementById("inStock").checked;
   const date = document.getElementById("createdAt").value;
-
+  console.log("date", date);
   try {
     if (editingId) {
       // Update existing product
       const response = await fetch(`${API_URL}/${editingId}`, {
         method: "PUT",
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           name: name,
           price: price,
@@ -190,7 +190,7 @@ async function submitForm() {
       const updatedProduct = await response.json();
       
       // Update in local array
-      const index = products.findIndex((p) => p.id === editingId);
+      const index = products.findIndex((p) => p._id === editingId);
       if (index > -1) {
         products[index] = updatedProduct;
       }
@@ -236,20 +236,20 @@ function displayProducts() {
   if (!tbody) return;
 
   tbody.innerHTML = "";
-
+  
   products.forEach((product) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-  <td>${product.name}</td>
-  <td>$${product.price}</td>
-  <td>${product.category}</td>
-  <td>${product.inStock ? "Yes" : "No"}</td>
-  <td>${product.createdAt}</td>
-  <td>
-    <button class="btn btn-sm btn-warning edit-btn" data-id="${product.id}">
+    <td>${product.name}</td>
+    <td>$${product.price}</td>
+    <td>${product.category}</td>
+    <td>${product.inStock ? "Yes" : "No"}</td>
+    <td>${product.createdAt}</td>
+    <td>
+    <button class="btn btn-sm btn-warning edit-btn" data-id="${product._id}">
       <i class="fa fa-edit"></i> Update
     </button>
-    <button class="btn btn-sm btn-danger delete-btn" data-id="${product.id}">
+    <button class="btn btn-sm btn-danger delete-btn" id="delete" data-id="${product._id}">
       <i class="fa fa-trash"></i> Delete
     </button>
   </td>
@@ -270,24 +270,38 @@ function attachEventListeners() {
 
   document.querySelectorAll(".delete-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
+      console.log("e.target", e.target);
+      
       const id = e.target.closest(".delete-btn").getAttribute("data-id");
-      console.log("Deleting product with id:", id);
+      // console.log("Deleting product with id:", id);
       deleteProduct(id);
     });
   });
 }
 
+function formatDateTime(isoString) {
+  const date = new Date(isoString);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = String(date.getFullYear());
+  return `${year}-${month}-${day}`;
+}
+
 function editProduct(id) {
-  const product = products.find((p) => p.id === id);
+  const product = products.find((p) => p._id === id);
+  console.log(product);
+  
   if (product) {
     document.getElementById("name").value = product.name;
     document.getElementById("price").value = product.price;
     document.getElementById("category").value = product.category;
     document.getElementById("inStock").checked = product.inStock;
-    document.getElementById("createdAt").value = product.createdAt;
+    document.getElementById("createdAt").value = formatDateTime(product.createdAt);
+    console.log(formatDateTime(product.createdAt));
+    
+    
     editingId = id;
-    document.querySelector('#product-form button[type="submit"]').textContent =
-      "Update Product";
+    document.querySelector('#product-form button[type="submit"]').textContent ="Update Product";
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 }
@@ -309,7 +323,7 @@ async function deleteProduct(id) {
         throw new Error("Failed to delete product");
       }
 
-      products = products.filter((p) => p.id !== id);
+      products = products.filter((p) => p._id !== id);
       displayProducts();
     } catch (error) {
       console.error("Error deleting product:", error);
